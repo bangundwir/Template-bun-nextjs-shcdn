@@ -1,0 +1,286 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Bun + Next.js + shadcn/ui Template - Cursor Rules
+
+## Project Overview
+This is a modern web development template using:
+- **Bun**: Ultra-fast JavaScript runtime and package manager
+- **Next.js 15**: React framework with App Router
+- **shadcn/ui**: Beautiful, accessible UI components
+- **Tailwind CSS v4**: Utility-first CSS framework
+- **TypeScript**: Type-safe development
+
+## Development Commands
+
+### Essential Bun Commands
+```bash
+# Start development server with Bun runtime (preferred)
+bun --bun run dev
+
+# Start development server with Node.js
+bun run dev
+
+# Install dependencies
+bun install
+
+# Add new dependencies
+bun add [package-name]
+
+# Build for production
+bun run build
+
+# Start production server
+bun run start
+
+# Run linting
+bun run lint
+```
+
+### shadcn/ui Component Management
+```bash
+# Initialize shadcn/ui (already done in template)
+bunx --bun shadcn@latest init
+
+# Add individual components
+bunx --bun shadcn@latest add button
+bunx --bun shadcn@latest add card
+bunx --bun shadcn@latest add input
+bunx --bun shadcn@latest add label
+
+# Popular component sets
+bunx --bun shadcn@latest add form textarea checkbox radio-group
+bunx --bun shadcn@latest add navigation-menu sheet dialog
+bunx --bun shadcn@latest add table badge avatar
+bunx --bun shadcn@latest add alert toast progress
+```
+
+## File Structure Conventions
+
+```
+project-root/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── globals.css        # Global styles
+│   │   ├── layout.tsx         # Root layout (includes suppressHydrationWarning)
+│   │   └── page.tsx           # Homepage
+│   ├── components/
+│   │   └── ui/                # shadcn/ui components
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── input.tsx
+│   │       └── label.tsx
+│   └── lib/
+│       └── utils.ts           # Utility functions (cn, etc.)
+├── components.json            # shadcn/ui configuration
+├── tailwind.config.ts         # Tailwind CSS configuration
+└── tsconfig.json             # TypeScript configuration
+```
+
+## Component Usage Patterns
+
+### Import shadcn/ui Components
+```tsx
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+```
+
+### Button Variants
+```tsx
+<Button>Default</Button>
+<Button variant="destructive">Destructive</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+```
+
+### Card Component Pattern
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card description</CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Card content */}
+  </CardContent>
+</Card>
+```
+
+### Form Elements Pattern
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="field">Field Label</Label>
+  <Input
+    id="field"
+    type="text"
+    placeholder="Enter value"
+  />
+</div>
+```
+
+## Common Issues & Solutions
+
+### Hydration Mismatch Fix
+If you encounter hydration errors due to browser extensions:
+```tsx
+// In layout.tsx
+<body 
+  className="..." 
+  suppressHydrationWarning={true}
+>
+```
+
+### Slow Filesystem Warning
+On Windows, if you see slow filesystem warnings:
+- Exclude project directory from antivirus scanning
+- Move `.next` folder to local drive if on network drive
+
+### Clean Build
+When experiencing build issues:
+```bash
+rm -rf .next node_modules
+bun install
+bun run dev
+```
+
+## Performance Optimizations
+
+### Bun Runtime
+- Always use `bun --bun run dev` for fastest development
+- Use `bun run build` for optimized production builds
+- Leverage Bun's native speed for package management
+
+### Next.js Optimizations
+- Use App Router for better performance
+- Implement static generation where possible
+- Optimize images with Next.js Image component
+
+### Tailwind CSS
+- Use `@apply` directive sparingly
+- Prefer utility classes over custom CSS
+- Utilize Tailwind's built-in responsive design
+
+## Styling Guidelines
+
+### Color System
+```css
+/* Use CSS variables for theming */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+}
+```
+
+### Responsive Design Pattern
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  {/* Responsive grid */}
+</div>
+```
+
+### Dark Mode Support
+```tsx
+<div className="bg-background text-foreground">
+  <h1 className="text-slate-900 dark:text-slate-100">
+    Title
+  </h1>
+</div>
+```
+
+## TypeScript Patterns
+
+### Component Props
+```tsx
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  size?: "default" | "sm" | "lg" | "icon"
+}
+```
+
+### Utility Function Types
+```tsx
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+## Deployment Patterns
+
+### Vercel (Recommended)
+```bash
+bun run build
+# Deploy to Vercel via Git or CLI
+```
+
+### Docker
+```dockerfile
+FROM oven/bun:1 as base
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+COPY . .
+RUN bun run build
+EXPOSE 3000
+CMD ["bun", "start"]
+```
+
+## Best Practices
+
+1. **Always use Bun runtime** for development (`bun --bun run dev`)
+2. **Leverage shadcn/ui components** instead of building from scratch
+3. **Use TypeScript strictly** for better development experience
+4. **Follow Tailwind CSS utility-first approach**
+5. **Test both development and production builds** before deployment
+6. **Use suppressHydrationWarning** on body element to prevent browser extension conflicts
+7. **Clean .next folder** when experiencing build issues
+8. **Keep components.json** updated for shadcn/ui configuration
+
+## Quick Start Checklist
+
+- [ ] Run `bun install` to install dependencies
+- [ ] Start development with `bun --bun run dev`
+- [ ] Add new components with `bunx --bun shadcn@latest add [component]`
+- [ ] Use proper import paths with `@/` alias
+- [ ] Test production build with `bun run build`
+- [ ] Verify responsive design on mobile devices
+- [ ] Check dark mode compatibility
+- [ ] Ensure TypeScript compiles without errors
+
+## Troubleshooting
+
+### Common Errors
+- **"Script not found 'dev'"**: Make sure you're in the project directory
+- **Hydration mismatch**: Add `suppressHydrationWarning={true}` to body
+- **Slow compilation**: Use `bun --bun run dev` instead of `bun run dev`
+- **Component not found**: Ensure shadcn/ui component is installed with `bunx --bun shadcn@latest add [component]`
+
+### Debug Commands
+```bash
+# Check Bun version
+bun --version
+
+# Verify project structure
+ls -la src/
+
+# Check installed components
+ls -la src/components/ui/
+
+# Verify dependencies
+cat package.json
+```
+
+---
+
+This template provides a solid foundation for modern web applications with excellent performance, beautiful UI, and great developer experience.
+
